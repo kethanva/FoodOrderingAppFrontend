@@ -1,0 +1,31 @@
+.app-header {
+    background-color: #222;
+    padding: 8px 32px 8px 16px;
+    display: flex;
+    justify-content: space-between;
+}
+.app-logo {
+    color: white;
+}
+.search-bar{
+    width: 250px;
+}
+.searchIcon{
+    color: white;
+    margin-left: 5px;
+}
+@media(max-width: 525px) {
+    .app-header {
+     flex-direction: column;
+     align-items: baseline;
+     min-width: 100%;
+ }
+ .app-logo {
+    color: white;
+    margin-bottom: 10px;
+}
+.login-button {
+    margin-top: 10px;
+} 
+
+}
