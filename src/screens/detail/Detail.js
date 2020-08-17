@@ -1,15 +1,15 @@
 import React, { Component } from "react";
-import './Home.css';
+import './Detail.css';
 import Header from '../../common/header/Header'
 
-class Home extends Component{
+class Detail extends Component{
     render(){
         return(
             <div>
-            <Header page="home"></Header>
-            Home
+            <Header></Header>
+            Detail
             </div>
         )
     }
 }
-export default Home;
+export default Detail;
