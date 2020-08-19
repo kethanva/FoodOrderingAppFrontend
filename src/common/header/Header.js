@@ -18,6 +18,8 @@ import PropTypes from 'prop-types';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 
 const styles = theme => ({
@@ -27,6 +29,11 @@ const styles = theme => ({
         '&:after': {
             'border-bottom': '2px solid white',
         },
+        profileButton: {
+            'padding-bottom': '8px',
+            'padding-top': '8px',
+            margin: '10px 15px 10px 5px'
+        }
     }
 
 });
@@ -61,6 +68,7 @@ class Header extends Component {
             loginContactNo: '',
             loginPassword: '',
             loginContactNoRequired: 'displayNone',
+            loginContactNoRequiredText: 'required',
             loginpasswordRequired: 'displayNone',
             firstName: '',
             lastName: '',
@@ -77,7 +85,14 @@ class Header extends Component {
             contactNumberRequiredText: 'required',
             snackbarIsOpen: false,
             signupErrorMessage: '',
-            signupErrorMessageRequired: 'displayNone'
+            signupErrorMessageRequired: 'displayNone',
+            loginErrorMessageRequired: 'displayNone',
+            loginErrorMessage: '',
+            snackbarMessage: '',
+            loginUsername: 'Preeteesh',
+            isLoggedIn: false,
+            anchorEl: '',
+            OpenMenu: false
         };
     }
     modalHandler = () => {
@@ -129,8 +144,36 @@ class Header extends Component {
         })
     }
     loginHandler = () => {
-        this.state.loginContactNo === '' ? this.setState({ loginContactNoRequired: 'displayFormHelperText' }) : this.setState({ loginContactNoRequired: 'displayNone' })
-        this.state.loginPassword === '' ? this.setState({ loginpasswordRequired: 'displayFormHelperText' }) : this.setState({ loginpasswordRequired: 'displayNone' })
+
+        if (this.validateLoginForm()) {
+            let xhr = new XMLHttpRequest();
+            let thisComponent = this;
+            xhr.addEventListener('readystatechange', function () {
+                if (this.readyState === 4) {
+                    if (this.status === 200) {
+                        let loginResponse = JSON.parse(this.response);
+                        thisComponent.setState({ snackbarIsOpen: true, snackbarMessage: 'Logged in successfully!', loginUsername: loginResponse.first_name, isLoggedIn: true })
+                        sessionStorage.setItem('access-token', this.getResponseHeader('access-token'));
+                        thisComponent.closeModalHandler();
+                    } else if (this.status === 401) {
+                        let response = JSON.parse(this.response);
+                        if (response.code === 'ATH-001' || response.code === 'ATH-002') {
+                            thisComponent.setState({ loginErrorMessage: response.message, loginErrorMessageRequired: 'displayFormHelperText' });
+                        }
+                    }
+                }
+            })
+            let data = null;
+            let authorization = window.btoa(this.state.loginContactNo + ':' + this.state.loginPassword);
+            xhr.open('POST', 'http://localhost:8080/api/customer/login');
+            xhr.setRequestHeader('Authorization', 'Basic ' + authorization);
+            xhr.setRequestHeader('Cache-Control', 'no-cache');
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(data);
+
+            console.log(sessionStorage.getItem('access-token'));
+
+        }
     }
     loginChangeHandler = (e) => {
         e.target.id === 'loginContactNo' && this.setState({ loginContactNo: e.target.value })
@@ -152,7 +195,7 @@ class Header extends Component {
             xhr.addEventListener('readystatechange', function () {
                 if (this.readyState === 4) {
                     if (this.status === 201) {
-                        thisComponent.setState({ snackbarIsOpen: true, value: 0 })
+                        thisComponent.setState({ snackbarIsOpen: true, value: 0, snackbarMessage: 'Registered successfully! Please login now!' })
                     } else if (this.status === 400) {
                         let response = JSON.parse(this.response);
                         if (response.code === 'SGR-001') {
@@ -174,7 +217,6 @@ class Header extends Component {
             xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.send(signupData);
         }
-
     }
 
     validateSignUpForm = () => {
@@ -183,7 +225,6 @@ class Header extends Component {
         let contactNoRegex = new RegExp('^\\d{10}$');
         let isValid = true;
 
-        this.state.firstName === '' ? this.setState({ firstNameRequired: 'displayFormHelperText' }) : this.setState({ firstNameRequired: 'displayNone' })
         if (this.state.firstName === '') {
             this.setState({ firstNameRequired: 'displayFormHelperText' });
             isValid = false;
@@ -220,9 +261,45 @@ class Header extends Component {
         return isValid;
     }
 
+    validateLoginForm = () => {
+        let contactNoRegex = new RegExp('^\\d{10}$');
+        let isValid = true;
+
+        if (this.state.loginContactNo === '') {
+            this.setState({ loginContactNoRequired: 'displayFormHelperText' });
+            isValid = false;
+        } else if (this.state.loginContactNo.length > 0 && !contactNoRegex.test(this.state.loginContactNo)) {
+            this.setState({ loginContactNoRequired: 'displayFormHelperText', loginContactNoRequiredText: 'Contact No. must contain only numbers and must be 10 digits long' });
+            isValid = false;
+        } else {
+            this.setState({ loginContactNoRequired: 'displayNone' });
+        }
+
+        if (this.state.loginPassword === '') {
+            this.setState({ loginpasswordRequired: 'displayFormHelperText' });
+            isValid = false;
+        } else {
+            this.setState({ loginpasswordRequired: 'displayNone' });
+        }
+        return isValid;
+    }
+
     closeSnackbar = () => {
         this.setState({ snackbarIsOpen: false })
     }
+    showMenuHandler = (event) => {
+        this.setState({ anchorEl: event.currentTarget })
+        this.setState({ OpenMenu: true })
+        console.log(this.props.baseURL)
+
+    }
+    clickLogoutHandler = () => {
+        console.log("Logout Clicked")
+    }
+    handleClose = (event) => {
+        this.setState({ OpenMenu: false })
+    }
+
 
     render() {
         const { classes } = this.props;
@@ -244,9 +321,14 @@ class Header extends Component {
                     }
                     <div className="login-button">
                         <div>
-                            <Button variant="contained" color="default" startIcon={<AccountCircle />} onClick={this.modalHandler}>
-                                LOGIN
-                        </Button>
+                            {this.state.isLoggedIn ?
+                                <Button variant="contained" color="default" className="profile-button" startIcon={<AccountCircle />} onClick={this.showMenuHandler}>
+                                    {this.state.loginUsername}
+                                </Button> :
+                                <Button variant="contained" color="default" startIcon={<AccountCircle />} onClick={this.modalHandler}>
+                                    LOGIN
+                                </Button>
+                            }
                         </div >
                     </div>
                 </header>
@@ -261,12 +343,13 @@ class Header extends Component {
                             <FormControl required>
                                 <InputLabel htmlFor="loginContactNo">Contact No.</InputLabel>
                                 <Input id="loginContactNo" className="inputField" type="text" username={this.state.loginContactNo} onChange={this.loginChangeHandler}></Input>
-                                <FormHelperText className={this.state.loginContactNoRequired}><span className="red">required</span></FormHelperText>
+                                <FormHelperText className={this.state.loginContactNoRequired}><span className="red">{this.state.loginContactNoRequiredText}</span></FormHelperText>
                             </FormControl><br />
                             <FormControl required>
                                 <InputLabel htmlFor="loginPassword">Password</InputLabel>
                                 <Input id="loginPassword" className="inputField" type="password" password={this.state.loginPassword} onChange={this.loginChangeHandler}></Input>
                                 <FormHelperText className={this.state.loginpasswordRequired}><span className="red">required</span></FormHelperText>
+                                <FormHelperText className={this.state.loginErrorMessageRequired}><span className="red">{this.state.loginErrorMessage}</span></FormHelperText>
                             </FormControl><br /><br /><br />
                             <Button variant="contained" color="primary" onClick={this.loginHandler}>LOGIN</Button>
                         </TabContainer>}
@@ -306,7 +389,7 @@ class Header extends Component {
                         horizontal: 'left',
                     }}
                     open={this.state.snackbarIsOpen}
-                    message={'Registered successfully! Please login now!'}
+                    message={this.state.snackbarMessage}
                     autoHideDuration={10}
                     action={
                         <React.Fragment>
@@ -316,6 +399,17 @@ class Header extends Component {
                         </React.Fragment>
                     }
                 />
+
+                <Menu
+                    id="simple-menu"
+                    anchorEl={this.state.anchorEl}
+                    keepMounted
+                    open={this.state.OpenMenu}
+                    onClose={this.handleClose}
+                >
+                    <MenuItem onClick={this.props.clickProfile}>My Account</MenuItem>
+                    <MenuItem onClick={this.clickLogoutHandler}>Logout</MenuItem>
+                </Menu>
             </div>
         )
     }

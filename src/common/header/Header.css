@@ -33,6 +33,9 @@
 .inputField{
     width: 270px;
 }
+.profile-button{
+    color: white;
+}
 @media(max-width: 600px) {
     .app-header {
      flex-direction: column;
