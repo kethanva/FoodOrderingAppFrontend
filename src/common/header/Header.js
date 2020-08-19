@@ -15,6 +15,9 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import PropTypes from 'prop-types';
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
 
 const styles = theme => ({
@@ -36,7 +39,7 @@ const customStyles = {
         maxHeight: '100vh',
         transform: 'translate(-50%, -50%)',
         overflowY: 'auto',
-        marginRight: '-50%' 
+        marginRight: '-50%'
     }
 };
 const TabContainer = function (props) {
@@ -69,9 +72,12 @@ class Header extends Component {
             emailRequired: 'displayNone',
             emailRequiredText: 'required',
             registerPasswordRequired: 'displayNone',
-            registerPasswordRequiredText : 'required',
+            registerPasswordRequiredText: 'required',
             contactNumberRequired: 'displayNone',
-            contactNumberRequiredText : 'required',
+            contactNumberRequiredText: 'required',
+            snackbarIsOpen: false,
+            signupErrorMessage: '',
+            signupErrorMessageRequired: 'displayNone'
         };
     }
     modalHandler = () => {
@@ -92,9 +98,9 @@ class Header extends Component {
             emailRequired: 'displayNone',
             emailRequiredText: 'required',
             registerPasswordRequired: 'displayNone',
-            registerPasswordRequiredText : 'required',
+            registerPasswordRequiredText: 'required',
             contactNumberRequired: 'displayNone',
-            contactNumberRequiredText : 'required'
+            contactNumberRequiredText: 'required'
         });
     }
     closeModalHandler = () => {
@@ -117,13 +123,12 @@ class Header extends Component {
             emailRequired: 'displayNone',
             emailRequiredText: 'required',
             registerPasswordRequired: 'displayNone',
-            registerPasswordRequiredText : 'required',
+            registerPasswordRequiredText: 'required',
             contactNumberRequired: 'displayNone',
-            contactNumberRequiredText : 'required'
+            contactNumberRequiredText: 'required'
         })
     }
     loginHandler = () => {
-        console.log(this.state);
         this.state.loginContactNo === '' ? this.setState({ loginContactNoRequired: 'displayFormHelperText' }) : this.setState({ loginContactNoRequired: 'displayNone' })
         this.state.loginPassword === '' ? this.setState({ loginpasswordRequired: 'displayFormHelperText' }) : this.setState({ loginpasswordRequired: 'displayNone' })
     }
@@ -140,35 +145,85 @@ class Header extends Component {
         e.target.id === 'contactNumber' && this.setState({ contactNumber: e.target.value })
     }
     registerHandler = () => {
-        console.log(this.state);
-        let emailRegex = new RegExp('^[\\w-_\\.+]*[\\w-_\\.]@([\\w]+\\.)+[\\w]+[\\w]$');
-        let passwordRegex = new RegExp('^(?=.*[a-z]){3,}(?=.*[A-Z]){2,}(?=.*[0-9]){2,}(?=.*[!@#$%^&*()--__+.]){1,}.{8,}$');
-        let contactNoRegex = new RegExp('^\\d{10}$');
 
-        this.state.firstName === '' ? this.setState({ firstNameRequired: 'displayFormHelperText' }) : this.setState({ firstNameRequired: 'displayNone' })
-        if(this.state.email === ''){
-            this.setState({ emailRequired: 'displayFormHelperText' });
-        }else if(this.state.email.length > 0 && !emailRegex.test(this.state.email)){
-            this.setState({ emailRequired: 'displayFormHelperText', emailRequiredText: 'Invalid Email'});
-        }else{
-            this.setState({ emailRequired: 'displayNone' });
-        }
-        if(this.state.rpassword === ''){
-            this.setState({ registerPasswordRequired: 'displayFormHelperText' });
-        }else if(this.state.rpassword.length > 0 && !passwordRegex.test(this.state.rpassword)){
-            this.setState({ registerPasswordRequired: 'displayFormHelperText', registerPasswordRequiredText: 'Password must contain at least one capital letter, one small letter, one number, and one special character'});
-        }else{
-            this.setState({ registerPasswordRequired: 'displayNone' });
-        }
-        if(this.state.contactNumber === ''){
-            this.setState({ contactNumberRequired: 'displayFormHelperText' });
-        }else if(this.state.contactNumber.length > 0 && !contactNoRegex.test(this.state.contactNumber)){
-            this.setState({ contactNumberRequired: 'displayFormHelperText', contactNumberRequiredText: 'Contact No. must contain only numbers and must be 10 digits long'});
-        }else{
-            this.setState({ contactNumberRequired: 'displayNone' });
+        if (this.validateSignUpForm()) {
+            let xhr = new XMLHttpRequest();
+            let thisComponent = this;
+            xhr.addEventListener('readystatechange', function () {
+                if (this.readyState === 4) {
+                    if (this.status === 201) {
+                        thisComponent.setState({ snackbarIsOpen: true, value: 0 })
+                    } else if (this.status === 400) {
+                        let response = JSON.parse(this.response);
+                        if (response.code === 'SGR-001') {
+                            thisComponent.setState({ signupErrorMessage: response.message, signupErrorMessageRequired: 'displayFormHelperText' });
+                        }
+                    }
+                }
+            })
+            let data = {
+                'contact_number': this.state.contactNumber,
+                'email_address': this.state.email,
+                'first_name': this.state.firstName,
+                'password': this.state.rpassword,
+                'last_name': this.state.lastName
+            };
+            let signupData = JSON.stringify(data);
+            xhr.open('POST', 'http://localhost:8080/api/customer/signup');
+            xhr.setRequestHeader('Cache-Control', 'no-cache');
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(signupData);
         }
 
     }
+
+    validateSignUpForm = () => {
+        let emailRegex = new RegExp('^[\\w-_\\.+]*[\\w-_\\.]@([\\w]+\\.)+[\\w]+[\\w]$');
+        let passwordRegex = new RegExp('^(?=.*[a-z]){3,}(?=.*[A-Z]){2,}(?=.*[0-9]){2,}(?=.*[!@#$%^&*()--__+.]){1,}.{8,}$');
+        let contactNoRegex = new RegExp('^\\d{10}$');
+        let isValid = true;
+
+        this.state.firstName === '' ? this.setState({ firstNameRequired: 'displayFormHelperText' }) : this.setState({ firstNameRequired: 'displayNone' })
+        if (this.state.firstName === '') {
+            this.setState({ firstNameRequired: 'displayFormHelperText' });
+            isValid = false;
+        } else {
+            this.setState({ firstNameRequired: 'displayNone' });
+        }
+        if (this.state.email === '') {
+            this.setState({ emailRequired: 'displayFormHelperText' });
+            isValid = false;
+        } else if (this.state.email.length > 0 && !emailRegex.test(this.state.email)) {
+            this.setState({ emailRequired: 'displayFormHelperText', emailRequiredText: 'Invalid Email' });
+            isValid = false;
+        } else {
+            this.setState({ emailRequired: 'displayNone' });
+        }
+        if (this.state.rpassword === '') {
+            this.setState({ registerPasswordRequired: 'displayFormHelperText' });
+            isValid = false;
+        } else if (this.state.rpassword.length > 0 && !passwordRegex.test(this.state.rpassword)) {
+            this.setState({ registerPasswordRequired: 'displayFormHelperText', registerPasswordRequiredText: 'Password must contain at least one capital letter, one small letter, one number, and one special character' });
+            isValid = false;
+        } else {
+            this.setState({ registerPasswordRequired: 'displayNone' });
+        }
+        if (this.state.contactNumber === '') {
+            this.setState({ contactNumberRequired: 'displayFormHelperText' });
+            isValid = false;
+        } else if (this.state.contactNumber.length > 0 && !contactNoRegex.test(this.state.contactNumber)) {
+            this.setState({ contactNumberRequired: 'displayFormHelperText', contactNumberRequiredText: 'Contact No. must contain only numbers and must be 10 digits long' });
+            isValid = false;
+        } else {
+            this.setState({ contactNumberRequired: 'displayNone' });
+        }
+        return isValid;
+    }
+
+    closeSnackbar = () => {
+        this.setState({ snackbarIsOpen: false })
+    }
+
     render() {
         const { classes } = this.props;
         return (
@@ -240,10 +295,27 @@ class Header extends Component {
                                 <InputLabel htmlFor="contactNumber">Contact No.</InputLabel>
                                 <Input id="contactNumber" className="inputField" type="number" onChange={this.registerChangeHandler}></Input>
                                 <FormHelperText className={this.state.contactNumberRequired}><span className="red">{this.state.contactNumberRequiredText}</span></FormHelperText>
+                                <FormHelperText className={this.state.signupErrorMessageRequired}><span className="red">{this.state.signupErrorMessage}</span></FormHelperText>
                             </FormControl><br /><br />
                             <Button variant="contained" color="primary" onClick={this.registerHandler}>SIGNUP</Button>
                         </TabContainer>}
                 </Modal>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    open={this.state.snackbarIsOpen}
+                    message={'Registered successfully! Please login now!'}
+                    autoHideDuration={10}
+                    action={
+                        <React.Fragment>
+                            <IconButton size="small" aria-label="close" color="inherit" onClick={this.closeSnackbar}>
+                                <CloseIcon fontSize="small" />
+                            </IconButton>
+                        </React.Fragment>
+                    }
+                />
             </div>
         )
     }
