@@ -154,6 +154,8 @@ class Header extends Component {
                         let loginResponse = JSON.parse(this.response);
                         thisComponent.setState({ snackbarIsOpen: true, snackbarMessage: 'Logged in successfully!', loginUsername: loginResponse.first_name, isLoggedIn: true })
                         sessionStorage.setItem('access-token', this.getResponseHeader('access-token'));
+                        sessionStorage.setItem('username', loginResponse.first_name);
+                        sessionStorage.setItem('isLoggedIn', true);
                         thisComponent.closeModalHandler();
                     } else if (this.status === 401) {
                         let response = JSON.parse(this.response);
@@ -290,16 +292,33 @@ class Header extends Component {
     showMenuHandler = (event) => {
         this.setState({ anchorEl: event.currentTarget })
         this.setState({ OpenMenu: true })
-        console.log(this.props.baseURL)
-
     }
     clickLogoutHandler = () => {
-        console.log("Logout Clicked")
+        let xhr = new XMLHttpRequest();
+        let thisComponent = this;
+        xhr.addEventListener('readystatechange', function () {
+            if (this.readyState === 4 && this.status === 200) {
+                sessionStorage.clear();
+                thisComponent.setState({ isLoggedIn: false, OpenMenu: false });
+            }
+        });
+        let data = null;
+        xhr.open('POST', 'http://localhost:8080/api/customer/logout');
+        xhr.setRequestHeader('authorization', 'Bearer ' + sessionStorage.getItem('access-token'));
+        xhr.setRequestHeader('Cache-Control', 'no-cache');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(data);
+        console.log(sessionStorage.getItem('access-token'));
+
     }
     handleClose = (event) => {
         this.setState({ OpenMenu: false })
     }
-
+    componentDidMount() {
+        if (sessionStorage.getItem('isLoggedIn')) {
+            this.setState({ loginUsername: sessionStorage.getItem('username'), isLoggedIn: sessionStorage.getItem('isLoggedIn') });
+        }
+    }
 
     render() {
         const { classes } = this.props;
