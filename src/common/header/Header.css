@@ -14,7 +14,29 @@
     color: white;
     margin-left: 5px;
 }
-@media(max-width: 525px) {
+.tabs{
+    margin-bottom: 20px;
+}
+.displayNone{
+    display: none;
+}
+.red{
+    color: red;
+}
+.displayFormHelperText{
+    width: 270px;
+    display: '';
+    font-size: 6px;
+    margin-bottom: 15px;
+
+}
+.inputField{
+    width: 270px;
+}
+.profile-button{
+    color: white;
+}
+@media(max-width: 600px) {
     .app-header {
      flex-direction: column;
      align-items: baseline;
@@ -27,5 +49,4 @@
 .login-button {
     margin-top: 10px;
 } 
-
 }

@@ -6,14 +6,21 @@ import Checkout from './checkout/Checkout';
 import Profile from './profile/Profile';
 
 class App extends Component { 
+	constructor() {
+        super();
+        this.state = {
+				baseURL : 'http://localhost:8080/api'
+        };
+    }
 render() { 
 	return ( 
 	<Router> 
 		<div className="App"> 
-            <Route exact path='/' component={Home}></Route>
-            <Route exact path='/detail' component={Details}></Route> 
-			<Route exact path='/checkout' component={Checkout}></Route> 
-			<Route exact path='/profile' component={Profile}></Route> 
+			<Route exact path='/' component={(props) => <Home baseURL= {this.state.baseURL} {...props} />}></Route>
+			<Route exact path='/detail' component={(props) => <Details baseURL= {this.state.baseURL} {...props} />} ></Route> 
+			<Route exact path='/checkout' component={(props) => <Checkout baseURL= {this.state.baseURL} {...props} />} ></Route> 
+			<Route exact path='/profile' component={(props) => <Profile baseURL= {this.state.baseURL} {...props} />} ></Route> 
+
 		</div> 
 	</Router> 
 ); 
