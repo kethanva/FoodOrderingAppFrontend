@@ -1,0 +1,12 @@
+.container{
+    margin-left: 3%;
+    margin-top: 10px;
+    width: 80%;   
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.root{
+    flex-grow: 1;
+    margin: 10px;
+}

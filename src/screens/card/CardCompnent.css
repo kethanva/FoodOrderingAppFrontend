@@ -1,0 +1,49 @@
+.root{
+  width: 260px;
+  height: 350px;
+  position:relative;
+  margin-bottom: 15px;
+
+}
+.card-container{
+  height: 65%;
+  margin-top: -20Px;
+  cursor: pointer;
+}
+.restaurant-image{
+  height: 40%;
+  width: 100%;
+}
+.ratings{
+  background-color: rgba(199, 156, 15, 0.801);
+  width: 90px;
+  padding: 3px;
+  display: flex;
+  justify-content: center
+}
+.name{
+  height: 25%;
+}
+.category{
+  padding-top: 15px;
+  height: 31.3%;
+}
+.bottom{
+  height: 13%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  bottom:0;
+}
+.price{
+  font-size: 10px;
+  text-align: right;
+}
+.star-icon{
+  color: white;
+}
+.ratingLabel{
+  margin-top: -6%;
+  color: white;
+  font-size: 11px;
+}
