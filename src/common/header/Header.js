@@ -329,6 +329,7 @@ class Header extends Component {
                     {this.props.page === "home" ?
                         <div className='search-bar'>
                             <Input className={classes.searchRestaurantTextInput}
+                                onChange={this.props.searchHandler}
                                 startAdornment={
                                     <InputAdornment position="start">
                                         <SearchIcon className="searchIcon"></SearchIcon>
