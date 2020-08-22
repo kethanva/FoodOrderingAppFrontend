@@ -2,9 +2,6 @@ import React, { Component } from "react";
 import './Home.css';
 import Header from '../../common/header/Header'
 import Card from '../card/CardCompnent';
-import Grid from '@material-ui/core/Grid';
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
 
 class Home extends Component {
     constructor() {
@@ -17,8 +14,8 @@ class Home extends Component {
     clickProfileHandler = () => {
         this.props.history.push("/profile");
     }
-    clickDetailHandler = () => {
-        this.props.history.push("/detail");
+    clickDetailHandler = (restaurantId) => {
+        this.props.history.push("/restaurant/" + restaurantId);
 
     }
     componentDidMount() {
@@ -35,7 +32,7 @@ class Home extends Component {
 
             }
         });
-        xhrData.open("GET", 'http://localhost:8080/api/restaurant');
+        xhrData.open("GET", this.props.baseURL + '/restaurant');
         xhrData.send(restaurants);
     }
     searchHandler = (e) => {
@@ -52,11 +49,10 @@ class Home extends Component {
                 <Header page="home" clickProfile={this.clickProfileHandler} searchHandler={this.searchHandler}></Header>
                 <div className="gridContainer">
                     {this.state.filteredrestaurants.map((restaurant) => (
-                        <Card restaurant={restaurant} key={restaurant.id} clickDetailHandler={this.clickDetailHandler}></Card>
+                        <Card restaurant={restaurant} key={restaurant.id} clickDetailHandler={this.clickDetailHandler.bind(this, restaurant.id)}></Card>
                     ))}
                 </div>
             </div>
-
         )
     }
 }
