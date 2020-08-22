@@ -3,11 +3,14 @@ import './Detail.css';
 import Header from '../../common/header/Header'
 
 class Detail extends Component{
+    componentDidMount() {
+        console.log(this.props.match.params.restaurantId);
+    }
     render(){
         return(
             <div>
             <Header></Header>
-            Detail
+             Restaurant : {this.props.match.params.restaurantId}
             </div>
         )
     }

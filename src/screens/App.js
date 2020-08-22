@@ -17,7 +17,7 @@ render() {
 	<Router> 
 		<div className="App"> 
 			<Route exact path='/' component={(props) => <Home baseURL= {this.state.baseURL} {...props} />}></Route>
-			<Route exact path='/detail' component={(props) => <Details baseURL= {this.state.baseURL} {...props} />} ></Route> 
+			<Route exact path='/restaurant/:restaurantId' component={(props) => <Details baseURL= {this.state.baseURL} {...props} />} ></Route> 
 			<Route exact path='/checkout' component={(props) => <Checkout baseURL= {this.state.baseURL} {...props} />} ></Route> 
 			<Route exact path='/profile' component={(props) => <Profile baseURL= {this.state.baseURL} {...props} />} ></Route> 
 
