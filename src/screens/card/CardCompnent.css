@@ -2,8 +2,7 @@
   width: 260px;
   height: 350px;
   position:relative;
-  margin-bottom: 15px;
-
+  margin: 15px;
 }
 .card-container{
   height: 65%;

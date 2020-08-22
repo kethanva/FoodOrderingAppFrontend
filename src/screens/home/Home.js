@@ -3,12 +3,15 @@ import './Home.css';
 import Header from '../../common/header/Header'
 import Card from '../card/CardCompnent';
 import Grid from '@material-ui/core/Grid';
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
 
 class Home extends Component {
     constructor() {
         super();
         this.state = {
-            restaurants: []
+            restaurants: [],
+            filteredrestaurants: []
         }
     }
     clickProfileHandler = () => {
@@ -25,8 +28,8 @@ class Home extends Component {
         xhrData.addEventListener("readystatechange", function () {
             if (this.readyState === 4 && this.status === 200) {
                 thisComponent.setState({
-                    restaurants: JSON.parse(this.response).restaurants
-
+                    restaurants: JSON.parse(this.response).restaurants,
+                    filteredrestaurants: JSON.parse(this.response).restaurants
                 });
                 console.log(JSON.parse(this.response).restaurants);
 
@@ -35,23 +38,25 @@ class Home extends Component {
         xhrData.open("GET", 'http://localhost:8080/api/restaurant');
         xhrData.send(restaurants);
     }
+    searchHandler = (e) => {
+        console.log(e.target.value);
+        let filterrestaurants = this.state.restaurants.filter(restaurant => {
+            return restaurant.restaurant_name.toLowerCase().includes(e.target.value.toLowerCase());
+        });
+        this.setState({ filteredrestaurants: filterrestaurants })
+    }
     render() {
 
         return (
             <div>
-                <Header page="home" clickProfile={this.clickProfileHandler}></Header>
-                <Grid container className="root">
-                    <Grid item xs={12}>
-                        <Grid container justify="center" spacing={1}>
-                            {this.state.restaurants.map((restaurant) => (
-                                <Grid key={restaurant.id} item>
-                                    <Card restaurant={restaurant} key={restaurant.id} clickDetailHandler={this.clickDetailHandler}></Card>
-                                </Grid>
-                            ))}
-                        </Grid>
-                    </Grid>
-                </Grid>
+                <Header page="home" clickProfile={this.clickProfileHandler} searchHandler={this.searchHandler}></Header>
+                <div className="gridContainer">
+                    {this.state.filteredrestaurants.map((restaurant) => (
+                        <Card restaurant={restaurant} key={restaurant.id} clickDetailHandler={this.clickDetailHandler}></Card>
+                    ))}
+                </div>
             </div>
+
         )
     }
 }
