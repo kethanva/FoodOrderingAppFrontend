@@ -63,6 +63,94 @@ class Details extends Component {
 
 
 
+    handleSnackBar = (message) => {
+        this.setState({
+            snackbarOpen: !this.state.snackbarOpen,
+            snackbarMessage: message,
+        });
+    }
+
+
+    checkoutHandler = () => {
+        if (this.state.cartItems === 0) {
+            this.handleSnackBar("Please add an item to your cart!");
+        } else if (!sessionStorage.getItem("access-token")) {
+            this.handleSnackBar("Please login first!");
+        } else {
+            let checkoutCart = {
+                restaurantDetails: {
+                    'average_price': this.state.average_price,
+                    'categories': this.state.categories,
+                    'average_rating': this.state.average_rating,
+                    'id': this.state.restaurant_id,
+                    'num_rated_customers': this.state.num_rated_customers,
+                    'photo_URL': this.state.photo_URL,
+                    'restaurant_name': this.state.restaurant_name,
+                },
+                cartItems: this.state.cartItemsList,
+                totalPrice: this.state.cartTotalPrice
+            };
+
+            this.props.history.push({
+                pathname: "/checkout",
+                checkoutCart: checkoutCart
+            })
+
+        }
+    }
+
+    removeItemFromCartHandler = (cartItem) => {
+        let cartItemsList = this.state.cartItemsList;
+        let index = cartItemsList.indexOf(cartItem);
+        cartItemsList[index].quantity -= 1;
+        if (cartItemsList[index].quantity === 0) {
+            cartItemsList.splice(index, 1);
+            this.handleSnackBar("Item removed from cart!");
+        } else {
+            this.handleSnackBar("Item quantity decreased by 1!");
+        }
+        this.setState({
+            cartItems: this.state.cartItems - 1,
+            cartItemsList: cartItemsList,
+            cartTotalPrice: this.state.cartTotalPrice - cartItem.item.price,
+        })
+    }
+
+    addItemFromCartHandler = (cartItem) => {
+        this.handleSnackBar("Item quantity increased by 1!");
+        let cartItemsList = this.state.cartItemsList;
+        let index = cartItemsList.indexOf(cartItem);
+        cartItemsList[index].quantity += 1;
+        this.setState({
+            cartItems: this.state.cartItems + 1,
+            cartItemsList: cartItemsList,
+            cartTotalPrice: this.state.cartTotalPrice + cartItem.item.price,
+        });
+    }
+
+    addItemHandler = (item) => {
+        this.handleSnackBar("Item added to cart!");
+        let cartItemsList = this.state.cartItemsList;
+        var cartItem;
+        let cartItems = cartItemsList.map((el) => el.item);
+        let index = cartItems.indexOf(item);
+        if (index === -1) {
+            cartItem = {
+                item: item,
+                quantity: 1,
+            }
+            cartItemsList.push(cartItem);
+        } else {
+            cartItemsList[index].quantity += 1;
+            cartItem = cartItemsList[index]
+        }
+
+        this.setState({
+            cartItems: this.state.cartItems + 1,
+            cartItemsList: cartItemsList,
+            cartTotalPrice: this.state.cartTotalPrice + cartItem.item.price,
+        });
+    }
 
     render() {
         const {classes} = this.props;
