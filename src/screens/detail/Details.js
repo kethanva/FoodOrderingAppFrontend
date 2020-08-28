@@ -66,7 +66,6 @@ class Details extends Component {
 
     getRestaurantDetails = (id) => {
         let res_url = `${this.props.baseURL}/restaurant/${id}`;
-        console.log(res_url)
         return fetch(res_url, {
             method: 'GET',
         }).then((response) => {

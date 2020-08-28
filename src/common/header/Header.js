@@ -308,7 +308,10 @@ class Header extends Component {
         xhr.setRequestHeader('Cache-Control', 'no-cache');
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send(data);
-        console.log(sessionStorage.getItem('access-token'));
+        sessionStorage.removeItem('access-token');
+        sessionStorage.removeItem('username');
+        sessionStorage.removeItem('isLoggedIn', false);
+        console.log("After logout",sessionStorage.getItem('access-token'));
 
     }
     handleClose = (event) => {
