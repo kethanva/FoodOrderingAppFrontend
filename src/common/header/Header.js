@@ -157,6 +157,7 @@ class Header extends Component {
                         sessionStorage.setItem('username', loginResponse.first_name);
                         sessionStorage.setItem('isLoggedIn', true);
                         thisComponent.closeModalHandler();
+                        console.log(sessionStorage.getItem('access-token'));
                     } else if (this.status === 401) {
                         let response = JSON.parse(this.response);
                         if (response.code === 'ATH-001' || response.code === 'ATH-002') {
@@ -172,9 +173,6 @@ class Header extends Component {
             xhr.setRequestHeader('Cache-Control', 'no-cache');
             xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.send(data);
-
-            console.log(sessionStorage.getItem('access-token'));
-
         }
     }
     loginChangeHandler = (e) => {
