@@ -1,7 +1,6 @@
 .root{
   width: 260px;
   height: 350px;
-  position:relative;
   margin: 15px;
 }
 .card-container{
@@ -15,10 +14,11 @@
 }
 .ratings{
   background-color: rgba(199, 156, 15, 0.801);
-  width: 90px;
-  padding: 3px;
+  width: 100px;
+  padding: 5px;
   display: flex;
-  justify-content: center
+  align-items: center;
+  
 }
 .name{
   height: 25%;
@@ -33,6 +33,7 @@
   display: flex;
   justify-content: space-between;
   bottom:0;
+  margin-top: 35px;
 }
 .price{
   font-size: 10px;
@@ -42,7 +43,9 @@
   color: white;
 }
 .ratingLabel{
-  margin-top: -6%;
   color: white;
   font-size: 11px;
+  margin-left: 5px;
+  height: 100%;
+  margin-top: 6px;
 }
