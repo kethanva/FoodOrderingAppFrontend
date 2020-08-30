@@ -95,6 +95,8 @@ class Header extends Component {
             OpenMenu: false
         };
     }
+
+    //Login/Signup Modal handler
     modalHandler = () => {
         this.setState({
             modalIsOpen: true,
@@ -118,10 +120,14 @@ class Header extends Component {
             contactNumberRequiredText: 'required'
         });
     }
+
+    //Login/Signup Modal handler
     closeModalHandler = () => {
         this.setState({ modalIsOpen: false });
         this.setState({ value: 0 })
     }
+
+    //Login/Signup Tab handler
     tabChangeHandler = (event, value) => {
         this.setState({
             value: value,
@@ -143,8 +149,8 @@ class Header extends Component {
             contactNumberRequiredText: 'required'
         })
     }
+    //Login Habdler
     loginHandler = () => {
-
         if (this.validateLoginForm()) {
             let xhr = new XMLHttpRequest();
             let thisComponent = this;
@@ -175,11 +181,14 @@ class Header extends Component {
             xhr.send(data);
         }
     }
+
+    //Login fields change handler
     loginChangeHandler = (e) => {
         e.target.id === 'loginContactNo' && this.setState({ loginContactNo: e.target.value })
         e.target.id === 'loginPassword' && this.setState({ loginPassword: e.target.value })
-
     }
+
+    //Registration fields change handler
     registerChangeHandler = (e) => {
         e.target.id === 'firstName' && this.setState({ firstName: e.target.value })
         e.target.id === 'lastName' && this.setState({ lastName: e.target.value })
@@ -187,8 +196,9 @@ class Header extends Component {
         e.target.id === 'password' && this.setState({ rpassword: e.target.value })
         e.target.id === 'contactNumber' && this.setState({ contactNumber: e.target.value })
     }
-    registerHandler = () => {
 
+    //Registration handler
+    registerHandler = () => {
         if (this.validateSignUpForm()) {
             let xhr = new XMLHttpRequest();
             let thisComponent = this;
@@ -219,6 +229,7 @@ class Header extends Component {
         }
     }
 
+    //Registration fields validations
     validateSignUpForm = () => {
         let emailRegex = new RegExp('^[\\w-_\\.+]*[\\w-_\\.]@([\\w]+\\.)+[\\w]+[\\w]$');
         let passwordRegex = new RegExp('^(?=.*[a-z]){3,}(?=.*[A-Z]){2,}(?=.*[0-9]){2,}(?=.*[!@#$%^&*()--__+.]){1,}.{8,}$');
@@ -261,6 +272,7 @@ class Header extends Component {
         return isValid;
     }
 
+    //Login fields validations
     validateLoginForm = () => {
         let contactNoRegex = new RegExp('^\\d{10}$');
         let isValid = true;
@@ -284,13 +296,18 @@ class Header extends Component {
         return isValid;
     }
 
+    //SnackBar close handler
     closeSnackbar = () => {
         this.setState({ snackbarIsOpen: false })
     }
+
+    //Menu handler
     showMenuHandler = (event) => {
         this.setState({ anchorEl: event.currentTarget })
         this.setState({ OpenMenu: true })
     }
+
+    //Logout Handler
     clickLogoutHandler = () => {
         let xhr = new XMLHttpRequest();
         let thisComponent = this;
@@ -309,9 +326,11 @@ class Header extends Component {
         sessionStorage.removeItem('access-token');
         sessionStorage.removeItem('username');
         sessionStorage.removeItem('isLoggedIn', false);
-        console.log("After logout",sessionStorage.getItem('access-token'));
+        console.log("After logout", sessionStorage.getItem('access-token'));
 
     }
+
+    //Login/Signup Modal handler
     handleClose = (event) => {
         this.setState({ OpenMenu: false })
     }

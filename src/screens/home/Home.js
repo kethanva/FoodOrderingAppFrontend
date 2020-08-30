@@ -11,13 +11,18 @@ class Home extends Component {
             filteredrestaurants: []
         }
     }
+
+    //Nagigate to Profile Page
     clickProfileHandler = () => {
         this.props.history.push("/profile");
     }
+
+    //Navigate to Detail page
     clickDetailHandler = (restaurantId) => {
         this.props.history.push("/restaurant/" + restaurantId);
-
     }
+
+    //Get all restaurants service call
     componentDidMount() {
         let thisComponent = this;
         let xhrData = new XMLHttpRequest();
@@ -35,6 +40,8 @@ class Home extends Component {
         xhrData.open("GET", this.props.baseURL + '/restaurant');
         xhrData.send(restaurants);
     }
+
+    //Search Handler
     searchHandler = (e) => {
         console.log(e.target.value);
         let filterrestaurants = this.state.restaurants.filter(restaurant => {

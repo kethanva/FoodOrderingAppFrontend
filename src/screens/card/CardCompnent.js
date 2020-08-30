@@ -5,7 +5,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Star from '@material-ui/icons/Star';
 
-
+// Restaurant Card Component
 class CardCompnent extends Component {
     constructor() {
         super();

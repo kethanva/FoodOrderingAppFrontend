@@ -68,6 +68,11 @@ class Details extends Component {
         this.getRestaurantDetails(id);
     };
 
+    //Nagigate to Profile Page
+    clickProfileHandler = () => {
+        this.props.history.push("/profile");
+    }
+
     //Get Restaurant details
     getRestaurantDetails = (id) => {
         let res_url = `${this.props.baseURL}/restaurant/${id}`;
@@ -192,7 +197,7 @@ class Details extends Component {
         return (
             <div>
                 <div>
-                    <Header showSearch="false" baseUrl={this.props.baseUrl}/>
+                    <Header showSearch="false" clickProfile={this.clickProfileHandler} baseUrl={this.props.baseUrl}/>
                 </div>
                 <div className="restaurant-information grey-color-bg">
                     <Grid container direction="row" spacing={0}>

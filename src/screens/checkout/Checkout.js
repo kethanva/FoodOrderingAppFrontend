@@ -223,7 +223,6 @@ class Checkout extends Component {
 
     componentDidMount() {
 
-
     }
 
     //Change the handler for Next click
@@ -461,6 +460,11 @@ class Checkout extends Component {
         this.setState({openPlaceOrderMsg: false});
     };
 
+    //Nagigate to Profile Page
+    clickProfileHandler = () => {
+        this.props.history.push("/profile");
+    }
+
     render() {
         const {classes} = this.props;
         const steps = getSteps();
@@ -469,7 +473,7 @@ class Checkout extends Component {
 
         return (
             <div>
-                <Header/>
+                <Header clickProfile={this.clickProfileHandler} />
                 <Grid container={true}>
                     <Grid item={true} xs={8}>
                         <div>
