@@ -45,7 +45,7 @@ const styles = theme => ({
         marginBottom: theme.spacing(2) * 2,
     },
     summaryCard: {
-        paddingRight: theme.spacing(2) * 3,
+        paddingRight: theme.spacing(2) * 2,
     },
     resetContainer: {
         padding: theme.spacing(2) * 3,
@@ -93,8 +93,16 @@ const styles = theme => ({
     summaryCardDivider: {
         marginTop: '5px',
     },
+    paddingLeft2per: {
+        paddingLeft: theme.spacing(2)
+    },
+    padding2PerRight:{
+        paddingRight: theme.spacing(0)
+    },
     placeOrderButton: {
         marginTop: '20px',
+        marginLeft: '20px',
+        marginRight: '20px',
     },
     greyColor: {
         color: 'grey',
@@ -206,9 +214,6 @@ class Checkout extends Component {
         xhrPaymentModes.open('GET', `${this.props.baseURL}/payment`);
         xhrPaymentModes.send(dataPaymentModes);
     };
-
-
-
 
 
     componentWillUnmount() {
@@ -453,7 +458,7 @@ class Checkout extends Component {
             <div>
                 <Header/>
                 <Grid container={true}>
-                    <Grid item={true} xs={9}>
+                    <Grid item={true} xs={8}>
                         <div>
                             <Stepper activeStep={activeStep} orientation='vertical'>
                                 {steps.map((label, index) => (
@@ -511,8 +516,10 @@ class Checkout extends Component {
                                                                             {address.pincode}
                                                                         </Typography>
 
-                                                                        <div style={{color:this.state[address.id] === 'select-address' ? 'green' : 'grey'}}>
-                                                                            <CheckCircleIcon className={classes.existingAddressCircle}/>
+                                                                        <div
+                                                                            style={{color: this.state[address.id] === 'select-address' ? 'green' : 'grey'}}>
+                                                                            <CheckCircleIcon
+                                                                                className={classes.existingAddressCircle}/>
                                                                         </div>
 
 
@@ -689,20 +696,17 @@ class Checkout extends Component {
                     </Grid>
 
 
-                    <Grid item={true} xs  className={classes.summaryCard}>
+                    <Grid item={true} xs className={classes.summaryCard}>
                         <Card id='summary-card'>
                             <CardContent>
-                                <Typography variant='h5'>
-                                    Summary
-                                </Typography>
-                                <br/>
-
-
-                                <Typography variant='h6' color='textSecondary' gutterBottom>
-                                    {this.state.customerCart.restaurantDetails.restaurant_name}
-                                </Typography>
-
                                 <div className='container'>
+                                    <Typography variant='h5'>
+                                        Summary
+                                    </Typography>
+                                    <br/>
+                                    <Typography variant='h6' color='textSecondary' gutterBottom>
+                                        {this.state.customerCart.restaurantDetails.restaurant_name}
+                                    </Typography>
                                     {this.state.customerCart.cartItems.map(item => (
                                         <div key={'item' + item.item.id + item.item.item_name}
                                              className='row w-100 no-gutters'>
@@ -714,41 +718,36 @@ class Checkout extends Component {
                                                 className='p-1 col-6 capital grey-color align-item-md-left'>{item.item.item_name}</div>
                                             <div
                                                 className='p-1 col-1 grey-color align-item-md-left'>{item.quantity}</div>
-                                            <div className='p-1 col-3 grey-color align-item-md-left'><i
-                                                className='fa fa-inr'></i>{item.item.price * item.quantity}.00
+                                            <div className='p-1 col-3 grey-color align-item-md-left'>
+                                                <i className='fa fa-inr'></i>{item.item.price * item.quantity}.00
                                             </div>
                                         </div>
                                     ))}
-                                </div>
 
-
-                                <Divider className={classes.summaryCardDivider}/>
-                                <div className='container '>
-                                    <div className='row'>
-                                        <div className='p-1 col-8'> Net Amount</div>
-                                        <div className='p-1 col-3 align-items-start'><i
-                                            className='fa fa-inr grey-color'></i>
+                                    <Divider className={classes.summaryCardDivider}/>
+                                    <div className='row w-100 no-gutters'>
+                                        <div className='p-1 col-7'>Net Amount</div>
+                                        <div className='p-1 col-0'></div>
+                                        <div className='p-1 col-0'></div>
+                                        <div className='p-1 col-4'>
+                                            <i className='fa fa-inr grey-color' style={{paddingRight:"theme.spacing(2)",paddingLeft:"theme.spacing(2) * 3"}}></i>
                                             {this.state.customerCart.totalPrice}.00
                                         </div>
                                     </div>
+                                    <Button
+                                        variant='contained'
+                                        color='primary'
+                                        className={classes.placeOrderButton}
+                                        fullWidth={true}
+                                        onClick={this.placeOrderOnClickHandler}>
+                                        Place Order
+                                    </Button>
                                 </div>
-
-
-                                <Button
-                                    variant='contained'
-                                    color='primary'
-                                    className={classes.placeOrderButton}
-                                    fullWidth={true}
-                                    onClick={this.placeOrderOnClickHandler}
-                                >
-                                    Place Order
-                                </Button>
                             </CardContent>
                         </Card>
                     </Grid>
 
                 </Grid>
-
 
                 <Snackbar
                     anchorOrigin={{

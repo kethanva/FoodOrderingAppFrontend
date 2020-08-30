@@ -21,7 +21,8 @@ import Paper from "@material-ui/core/Paper";
 
 const styles = theme => ({
     root: {
-        flexGrow: 1
+        flexGrow: 1,
+        paddingLeft: theme.spacing(2)*2
     },
     paper: {
         padding: theme.spacing(0),
@@ -29,6 +30,9 @@ const styles = theme => ({
         border: "none",
         boxShadow: "none",
         backgroundColor: "#e8e9eb"
+    },
+    cardContent:{
+        paddingLeft:theme.spacing(2)*3
     }
 });
 
@@ -264,8 +268,8 @@ class Details extends Component {
                     </div>
                     <div className="cart">
                         <div className="padding-5per">
-                            <Card className={classes.card}>
-                                <CardContent>
+                            <Card className={classes.card} >
+                                <CardContent className={classes.cardContent}>
                                     <div>
                                         <div style={{float: "left", width: "10%"}}><Badge
                                             badgeContent={this.state.cartItems === null ? 0 : this.state.cartItems}
@@ -280,19 +284,19 @@ class Details extends Component {
                                             <CartItem item={cartItem} this={this}/>
                                         </div>
                                     )}
-                                    <div style={{display: "inline-block", width: "100%", paddingTop: "3%"}}>
-                                        <div style={{float: "left"}}><Typography variant="body1" gutterBottom
-                                                                                 style={{fontWeight: 'bold'}}> TOTAL
-                                            AMOUNT </Typography></div>
-                                        <div style={{float: "right", width: "14%"}}><i className="fa fa-inr"
-                                                                                       aria-hidden="true"> </i> {this.state.cartTotalPrice.toFixed(2)}
+                                    <div style={{display: "inline-block", width: "90%", paddingTop: "3%", paddingLeft: "2%"}}>
+                                        <div style={{float: "left"}}>
+                                            <Typography variant="body1" gutterBottom style={{fontWeight: 'bold'}}>
+                                                TOTAL AMOUNT </Typography></div>
+                                        <div style={{float: "right", width: ""}}>
+                                            <i className="fa fa-inr" aria-hidden="true"> </i> {this.state.cartTotalPrice.toFixed(2)}
                                         </div>
                                     </div>
                                 </CardContent>
                                 <CardActions>
-                                    <div>
+                                    <div style={{paddingLeft: "8%",paddingRight: "8%",width:"100%"}}>
                                         <Button variant="contained" color="primary"
-                                                onClick={this.checkoutHandler}> CHECKOUT </Button>
+                                                onClick={this.checkoutHandler} style={{width:"100%"}}> CHECKOUT </Button>
                                     </div>
                                 </CardActions>
                             </Card>
@@ -343,7 +347,7 @@ function CartItem(props) {
                    aria-hidden="true"></i>
             </div>
             <div style={{width: "5%", display: "flex", alignItems: "center"}}> {cartItem.quantity} </div>
-            <div style={{width: "25%", display: "flex", alignItems: "center"}}>
+            <div style={{width: "16%", display: "flex", alignItems: "center"}}>
                 <i onClick={(e) => props.this.addItemFromCartHandler(cartItem)} className="cartButton fa fa-plus"
                    aria-hidden="true"></i>
             </div>
