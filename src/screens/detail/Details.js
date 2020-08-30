@@ -68,6 +68,7 @@ class Details extends Component {
         this.getRestaurantDetails(id);
     };
 
+    //Get Restaurant details
     getRestaurantDetails = (id) => {
         let res_url = `${this.props.baseURL}/restaurant/${id}`;
         return fetch(res_url, {
@@ -93,6 +94,7 @@ class Details extends Component {
         });
     };
 
+    //Handle message bar
     messageBarHandler = (message) => {
         this.setState({
             messagebarOpen: !this.state.messagebarOpen,
@@ -100,6 +102,7 @@ class Details extends Component {
         });
     }
 
+    //Handle Checkout
     checkoutHandler = () => {
         if (this.state.cartItems === 0) {
             this.messageBarHandler("Please add an item to your cart!");
@@ -128,6 +131,7 @@ class Details extends Component {
         }
     }
 
+    //Remove item from cart
     removeItemFromCartHandler = (cartItem) => {
         let cartItemsList = this.state.cartItemsList;
         let index = cartItemsList.indexOf(cartItem);
@@ -145,6 +149,7 @@ class Details extends Component {
         })
     }
 
+    //Add item to the cart
     addItemFromCartHandler = (cartItem) => {
         this.messageBarHandler("Item quantity increased by 1!");
         let cartItemsList = this.state.cartItemsList;
@@ -157,6 +162,7 @@ class Details extends Component {
         });
     }
 
+    //Add item handler
     addItemHandler = (item) => {
         this.messageBarHandler("Item added to cart!");
         let cartItemsList = this.state.cartItemsList;
@@ -331,6 +337,7 @@ class Details extends Component {
     }
 }
 
+//Display the cart items with changed values
 function CartItem(props) {
     const cartItem = props.item;
     const color = props.item
@@ -357,6 +364,7 @@ function CartItem(props) {
     )
 }
 
+//Cart items calculation
 function CategoryItem(props) {
     return (
         <div style={{padding: "3%"}}>
@@ -379,6 +387,7 @@ function CategoryItem(props) {
     )
 };
 
+//Menu items of restaurant displayer
 function MenuItem(props) {
     const color = props.item.item_type
     && props.item.item_type.toString()

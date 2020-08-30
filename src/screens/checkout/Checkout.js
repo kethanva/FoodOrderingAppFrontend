@@ -175,6 +175,8 @@ class Checkout extends Component {
             customerCart: this.props.location.checkoutCart
         });
         let self = this;
+
+        //customer addresses requests
         let dataCustomerAddress = null;
         let xhrCustomerAddress = new XMLHttpRequest();
         xhrCustomerAddress.addEventListener('readystatechange', function () {
@@ -188,7 +190,7 @@ class Checkout extends Component {
         xhrCustomerAddress.setRequestHeader('authorization', 'Bearer ' + sessionStorage.getItem('access-token'));
         xhrCustomerAddress.send(dataCustomerAddress);
 
-
+        //states requests
         let dataStates = null;
         let xhrStates = new XMLHttpRequest();
         xhrStates.addEventListener("readystatechange", function () {
@@ -224,14 +226,13 @@ class Checkout extends Component {
 
     }
 
+    //Change the handler for Next click
     stepperNextHandler = () => {
         let self = this;
 
         if (this.state.activeStep === 0 && this.state.selectedExistingAddress === null) {
             return;
         }
-
-
         if (this.state.activeStep === 1 && this.state.selectedPaymentMode === null) {
             return;
         }
@@ -241,18 +242,21 @@ class Checkout extends Component {
         }));
     };
 
+    //Change the handler for Back click
     stepperBackHandler = () => {
         this.setState(preState => ({
             activeStep: preState.activeStep - 1,
         }));
     };
 
+    //Steps reset
     stepperResetHandler = () => {
         this.setState({
             activeStep: 0,
         });
     };
 
+    //Tabs change
     tabChangeHandler = (event, value) => {
         this.setState({tabValue: value});
     };
@@ -265,26 +269,32 @@ class Checkout extends Component {
         });
     };
 
+    //Flat change handler
     flatBuildingNoChangeHandler = event => {
         this.setState({flatBuildingNo: event.target.value});
     };
 
+    //Localoty change handler
     localityChangeHandler = event => {
         this.setState({locality: event.target.value});
     };
 
+    //City change handler
     cityChangeHandler = event => {
         this.setState({city: event.target.value});
     };
 
+    //State change handler
     stateChangeHandler = event => {
         this.setState({newAddressState: event.target.value});
     };
 
+    //Pincode change handler
     pincodeChangeHandler = event => {
         this.setState({pincode: event.target.value});
     };
 
+    //On click of save function
     saveAddressOnClickHandler = () => {
         let self = this;
 
@@ -383,14 +393,17 @@ class Checkout extends Component {
         xhrNewAddress.send(JSON.stringify(dataNewAddress));
     };
 
+    //Radio button changed
     radioChangeHandler = event => {
         this.setState({radioValue: event.target.value});
     };
 
+    //Radio button handler
     radioClickHandler = (paymentId) => {
         this.setState({selectedPaymentMode: paymentId});
     };
 
+    //On click of order button
     placeOrderOnClickHandler = () => {
 
         let self = this;
@@ -439,6 +452,7 @@ class Checkout extends Component {
         xhrPlaceOrder.send(JSON.stringify(dataPlaceOrder));
     };
 
+    //Close and place order
     placeOrderMsgOnCloseHandler = (event, reason) => {
         if (reason === 'clickaway') {
             return;
