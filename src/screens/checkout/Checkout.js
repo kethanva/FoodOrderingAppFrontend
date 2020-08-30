@@ -170,7 +170,8 @@ class Checkout extends Component {
         activeStep: 0,
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
+        if(sessionStorage.getItem('access-token') !== null && this.props.location.checkoutCart !== undefined){
         this.setState({
             customerCart: this.props.location.checkoutCart
         });
@@ -214,6 +215,9 @@ class Checkout extends Component {
         });
         xhrPaymentModes.open('GET', `${this.props.baseURL}/payment`);
         xhrPaymentModes.send(dataPaymentModes);
+    }else{
+        this.props.history.push("/");
+    }
     };
 
 
@@ -471,7 +475,7 @@ class Checkout extends Component {
         const {activeStep} = this.state;
         const {tabValue} = this.state;
 
-        return (
+        return sessionStorage.getItem('access-token') !== null && this.props.location.checkoutCart !== undefined ? (
             <div>
                 <Header clickProfile={this.clickProfileHandler} />
                 <Grid container={true}>
@@ -790,7 +794,7 @@ class Checkout extends Component {
                     ]}
                 />
             </div>
-        );
+        ) : "";
     }
 }
 
