@@ -101,7 +101,6 @@ const styles = theme => ({
     },
     placeOrderButton: {
         marginTop: '20px',
-        marginLeft: '20px',
         marginRight: '20px',
     },
     greyColor: {
@@ -726,11 +725,11 @@ class Checkout extends Component {
 
                                     <Divider className={classes.summaryCardDivider}/>
                                     <div className='row w-100 no-gutters'>
-                                        <div className='p-1 col-7'>Net Amount</div>
-                                        <div className='p-1 col-0'></div>
-                                        <div className='p-1 col-0'></div>
+                                        <div className='p-1 col-6'>Net Amount</div>
+                                        <div className='p-1 col-1'></div>
+                                        <div className='p-1 col-1'></div>
                                         <div className='p-1 col-4'>
-                                            <i className='fa fa-inr grey-color' style={{paddingRight:"theme.spacing(2)",paddingLeft:"theme.spacing(2) * 3"}}></i>
+                                            <i className='fa fa-inr grey-color align-items-end'></i>
                                             {this.state.customerCart.totalPrice}.00
                                         </div>
                                     </div>
